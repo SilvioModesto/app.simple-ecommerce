@@ -1,7 +1,10 @@
 import { IProduct, IProductHandler } from "@/interfaces";
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, TextField, Typography } from "@mui/material";
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider, IconButton, TextField, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import CloseIcon from '@mui/icons-material/Close';
+import AddIcon from '@mui/icons-material/Add';
+import RemoveIcon from '@mui/icons-material/Remove';
+import { match } from "assert";
 
 interface ProductsFormProps {
   product: IProduct | null | undefined;
@@ -29,28 +32,36 @@ export function ProductForm(props: ProductsFormProps) {
     <>
       <Dialog open={Boolean(props.product)} onClose={onClose}>
         <DialogTitle>
-          Adicionar <strong>{product.label}</strong>
+          <strong>{product.label}:</strong>
           <IconButton
-          aria-label="close"
-          onClick={onClose}
-          sx={{
-            position: 'absolute',
-            right: 8,
-            top: 8,
-            color: (theme) => theme.palette.grey[500],
-          }}
-        >
-          <CloseIcon />
-        </IconButton>
+            aria-label="close"
+            onClick={onClose}
+            sx={{
+              position: 'absolute',
+              right: 8,
+              top: 8,
+              color: (theme) => theme.palette.grey[500],
+            }}
+          >
+            <CloseIcon />
+          </IconButton>
         </DialogTitle>
+        <Divider />
         <DialogContent>
           <Typography>Preço unit. <strong>{product.price}</strong></Typography>
-          <Typography>Preço total <strong>{product.price * product.quantity}</strong></Typography>
+          <Typography>Preço total.<strong> R$ {(product.price * product.quantity).toFixed(2)}</strong></Typography>
           <div>
-          <Button onClick={() => setProduct({ ...product, quantity: product.quantity - 1 })}>-</Button>
+            <IconButton
+              onClick={() => setProduct({ ...product, quantity: Math.max(product.quantity - 1, 0) })}
+            >
+              <RemoveIcon fontSize="medium" />
+            </IconButton>
+
             <TextField
               type="number"
               variant="outlined"
+              placeholder="Quantidade"
+              InputProps={{ inputProps: { min: 0 } }}
               value={product.quantity}
               onChange={(e) =>
                 setProduct({
@@ -59,13 +70,13 @@ export function ProductForm(props: ProductsFormProps) {
                 })
               }
             />
-            <Button onClick={() => setProduct({ ...product, quantity: product.quantity + 1 })}>+</Button>
-            
+            <IconButton onClick={() => setProduct({ ...product, quantity: product.quantity + 1 })}> <AddIcon fontSize="medium" /> </IconButton>
           </div>
         </DialogContent>
         <DialogActions>
-          <Button 
-            variant="text"
+          <Button
+            variant="outlined"
+            color="success"
             onClick={() => handleSave()}>
             Adicionar
           </Button>

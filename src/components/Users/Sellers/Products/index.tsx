@@ -1,10 +1,12 @@
-import { IProduct, IProductHandler } from "@/interfaces";
+import { IProduct } from "@/interfaces";
 import { useClientSellerStore } from "@/stores/client-seller.store";
 import { List, ListItem, TextField, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useStore } from "zustand";
 import { SellerProductsItem } from "./Item";
 import { ProductForm } from "./Form";
+import { useCartStore } from "@/stores";
+
 
 interface SellerProductsProps {
   sellerId?: string | null | undefined;
@@ -12,6 +14,7 @@ interface SellerProductsProps {
 
 export function SellerProducts(props: SellerProductsProps) {
   const clientSellerStore = useStore(useClientSellerStore);
+  const cartStore = useStore(useCartStore);
   const { sellerId } = props;
   const [products, setProducts] = useState<IProduct[]>([]);
   const [filter, setFilter] = useState<string>('');
@@ -36,6 +39,10 @@ export function SellerProducts(props: SellerProductsProps) {
     p.label.toLowerCase().includes(filter.toLowerCase())
   );
 
+  function handleAddProduct(product: IProduct): void {
+    cartStore.addProduct(sellerId!, product);
+    setProductForm(null);
+  }
   
   return (
     <>
@@ -72,7 +79,7 @@ export function SellerProducts(props: SellerProductsProps) {
       
       <ProductForm
         product={productForm}
-        onSave={(p) => console.log('Salvou', p)}
+        onSave={(p) => handleAddProduct(p)}
         onClose={() => setProductForm(null)}
       />
     </>
