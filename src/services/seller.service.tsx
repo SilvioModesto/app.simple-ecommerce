@@ -1,4 +1,4 @@
-import { IProduct, ISeller } from "@/interfaces";
+import { ISeller } from "@/interfaces";
 import axios from "axios";
 
 const basePath = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';

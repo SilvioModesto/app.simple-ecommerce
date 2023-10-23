@@ -15,4 +15,10 @@ export class IProductHandler {
       ...data,
     };
   }
+
+  static getTotal( products: IProduct[]): number {
+    return products
+    .map((p) => p.price * (p.quantity || 0))
+    .reduce((accumulator, currValue) => accumulator + currValue, 0);
+  }
 }

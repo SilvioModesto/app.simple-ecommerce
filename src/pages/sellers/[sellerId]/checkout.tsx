@@ -1,7 +1,11 @@
-import { Typography } from "@mui/material";
 
-export default function Cart() {
+import { Checkout } from "@/components/Users/Sellers/Checkout";
+import { useRouter } from "next/router";
+
+export default function CheckoutPage() {
+  const router = useRouter();
+  const { sellerId } = router.query
   return (
-    <Typography>Finalizar Compra</Typography>
+    <Checkout sellerId={ sellerId as string}/>
   )
 }
